@@ -1,0 +1,47 @@
+CREATE TABLE stgdb.STG_ELEK_mgcad_mla_usuar_aprov(
+	aprova_auto VARCHAR2 (10),
+	aprova_auto_aprov VARCHAR2 (10),
+	char_1 VARCHAR2 (200),
+	char_2 VARCHAR2 (200),
+	char_3 VARCHAR2 (200),
+	char_4 VARCHAR2 (200),
+	char_5 VARCHAR2 (200),
+	cod_estabel VARCHAR2 (10),
+	cod_lotacao VARCHAR2 (40),
+	cod_usuar VARCHAR2 (24),
+	data_1 date
+	data_2 date
+	data_3 date
+	data_4 date
+	data_5 date
+	dec_1 NUMBER (23,8),
+	dec_2 NUMBER (23,8),
+	dec_3 NUMBER (23,8),
+	dec_4 NUMBER (23,8),
+	dec_5 NUMBER (23,8),
+	destino_lotacao VARCHAR2 (10),
+	e_mail VARCHAR2 (80),
+	envia_email VARCHAR2 (10),
+	ep_codigo VARCHAR2 (10),
+	idi_ordenacao_portal NUMBER (10),
+	int_1 VARCHAR2 (10),
+	int_2 VARCHAR2 (10),
+	int_3 VARCHAR2 (10),
+	int_4 VARCHAR2 (10),
+	int_5 VARCHAR2 (10),
+	libera_verba VARCHAR2 (10),
+	log_1 VARCHAR2 (10),
+	log_2 VARCHAR2 (10),
+	log_3 VARCHAR2 (10),
+	log_4 VARCHAR2 (10),
+	log_5 VARCHAR2 (10),
+	log_aprovac_unica_pendcia VARCHAR2 (10),
+	log_html VARCHAR2 (10),
+	log_pendcia_todas_empres VARCHAR2 (10),
+	log_usuar_config VARCHAR2 (10),
+	mo_codigo NUMBER (10),
+	nome_usuar VARCHAR2 (80),
+	perm_aprov VARCHAR2 (10),
+	recebe_email VARCHAR2 (10),
+	usuar_mestre VARCHAR2 (10)
+)

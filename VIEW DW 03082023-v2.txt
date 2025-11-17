@@ -1,23 +1,5 @@
--- =============================================
--- Autor: Diogo Gomes
--- Data: 2024-09-10
--- Descrição: VIEW Com informações primordiais ao financeiro
---            
--- =============================================
-
-/*
-Este script foi desenvolvido para o departamento financeiro que alimenta os dashboards RealXOrçado, Analise vendas Marcos.
-Não alterar sem autorização prévia do manager.
-*/
-
-/*
-22/10/25 ajuste da base de custo gerencial, antes utilzida a proddta.TEMP_HISTORICO_CUSTO alimentada por uma procedure criada pelo chum
-e agora uma estrutura feita para ter apenas os ultimos dias do mes trazendo uma consulta mais limpa e objetiva.
-*/
-
-
-CREATE OR REPLACE FORCE EDITIONABLE VIEW "PUBDB"."PUB_JDE_SALES_V" ("ORIGEM", "P_ICMS_FORA", "DESPESA_FRETE", "ICMS_TOTAL", "PIS", "COF", "COD_VENDEDOR", "VENDEDOR", "FRETE", "LOTE", "LINHA", "REFERENCIA_DEV", "TIPO", "ULT_ST", "PROX_ST", "DATA_FATURAMENTO", "DATA", "DATA_INCLUSAO", "MES_ANO", "DATA_CLIENTE", "SOLICITADO", "PEDIDO", "NOTA", "CODIGO_CLIENTE", "CLIENTE", "UF", "CONDICAO_PAG_CADASTRO", "COND_PAG_PEDIDO", "COD", "DESCRICAO", "UM", "QTD", "PRECO_UNITARIO", "PRECO_UNITARIO2", "PRECO_UNITARIO_NET", "MATERIAL", "CUSTO_UNITARIO", "ICMS_P", "PIS_COF_P", "IPI_P", "ST", "DIFAL", "IMNA", "RECEITA_BRUTA_TOTAL", "RECEITA_NET_TOTAL", "CUSTO_MATERIAL_TOTAL", "CUSTO_TOTAL_2", "BUSINESS_UNIT", "TECNOLOGIA", "UN_NEG", "FILIAL", "FILIAL2", "COD_TRANSP", "TRANSP", "TIPO_PEDIDO", "OBS_PED", "UM_PRINC", "ICMS_ENTRADA", "TRIB_SUBST", "DESC_REPASSE", "DESC_ZF", "FORN", "FORN_PRIMEIRO", "VALOR_IPI", "INTERCOMPANY", "RESPONSAVEL_CELULA", "RESPONSAVEL_CELULA_2", "USER_VENDEDOR", "DATA_CUSTO", "CUSTO_GERENCIAL", "LISTA", "DESCRICAO_R", "EMB", "CUSTO_EMB", "UTEIS_DIA", "UTEIS_MES", "COMPLEMENTO_RECEITA_BRUTA", "RECEITA_BRUTA_M_TOTAL", "RECEITA_LIQUIDA_M_TOTAL", "PREVISAO_RECEITA_BRUTA", "PREVISAO_RECEITA_LIQUIDA", "PREVISAO_MARGEM", "INFORMACAO_FRETE", "CIDADE", "PRAZO_MEDIO_PAG", "TON_DIA_UTIL", "PAIS", "GRUPO_ECO", "STATUS", "PREVISAO_QTD", "SEGMENTO", "CAT5", "VALOR_FRETE", "VALOR_SEGURO") AS 
-  WITH temp AS (
+CREATE OR REPLACE FORCE EDITIONABLE VIEW "PUBDB"."PUB_JDE_SALES_V" ("ORIGEM", "P_ICMS_FORA", "DESPESA_FRETE", "ICMS_TOTAL", "COD_VENDEDOR", "VENDEDOR", "FRETE", "LOTE", "LINHA", "REFERENCIA_DEV", "TIPO", "ULT_ST", "PROX_ST", "DATA_FATURAMENTO", "DATA", "DATA_INCLUSAO", "MES_ANO", "DATA_CLIENTE", "SOLICITADO", "PEDIDO", "NOTA", "CODIGO_CLIENTE", "CLIENTE", "UF", "CONDICAO_PAG_CADASTRO", "COND_PAG_PEDIDO", "COD", "DESCRICAO", "UM", "QTD", "PRECO_UNITARIO", "PRECO_UNITARIO_NET", "MATERIAL", "CUSTO_UNITARIO", "ICMS_P", "PIS_COF_P", "IPI_P", "ST", "DIFAL", "IMNA", "RECEITA_BRUTA_TOTAL", "RECEITA_NET_TOTAL", "CUSTO_MATERIAL_TOTAL", "CUSTO_TOTAL_2", "BUSINESS_UNIT", "TECNOLOGIA", "UN_NEG", "FILIAL", "FILIAL2", "COD_TRANSP", "TRANSP", "TIPO_PEDIDO", "OBS_PED", "UM_PRINC", "ICMS_ENTRADA", "TRIB_SUBST", "DESC_REPASSE", "DESC_ZF", "FORN", "FORN_PRIMEIRO", "VALOR_IPI", "INTERCOMPANY", "RESPONSAVEL_CELULA", "RESPONSAVEL_CELULA_2", "USER_VENDEDOR", "DATA_CUSTO", "CUSTO_GERENCIAL", "LISTA", "DESCRICAO_R", "EMB", "CUSTO_EMB","UTEIS_DIA", "UTEIS_MES","COMPLEMENTO_RECEITA_BRUTA","RECEITA_BRUTA_M_TOTAL", "RECEITA_LIQUIDA_M_TOTAL","PREVISAO_RECEITA_BRUTA", "PREVISAO_RECEITA_LIQUIDA", "PREVISAO_MARGEM", "INFORMACAO_FRETE", "CIDADE","PRAZO_MEDIO_PAG","TON_DIA_UTIL","PAIS","GRUPO_ECO","STATUS","PREVISAO_QTD","SEGMENTO") AS 
+WITH temp AS (
     SELECT
         CASE
             WHEN substr(sddcto, 1, 1) IN ( 'D' )
@@ -90,10 +72,9 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "PUBDB"."PUB_JDE_SALES_V" ("ORIGEM", "P
         AND sddcto IN ( 'SG', 'SX', 'SV', 'VI', 'VO',
                          'VZ', 'V5', 'V7', 'V8',
                         'VA', 'VF', 'VG', 'VH', 'SO',
-                        'SO', 'DO', 'CV','VN','VY','VU','VQ','V0','V3' )
---incluido 'VQ','V0','V3', para que apareca MCLAW
+                        'SO', 'DO', 'CV','VN','VY','VU' )
+--AND SDDOCO='51641'
 
-and sdco!='71000'
 
 ), ref_devol AS (
      SELECT
@@ -134,7 +115,7 @@ and sdco!='71000'
                                            AND do.sdocto = sldcto
                                            AND (sldcto) = 'VL'
                                            AND do.sdco = slkcoo
-                                           --AND DO.SDODOC=SLDOC
+                                                                                                                                                AND DO.SDODOC=SLDOC
         INNER JOIN proddta.f4211    vo ON to_char(to_number((nvl(TRIM(slrorn), 0)))) = to_char(vo.sddoco)
                                              AND slrcto = vo.sddcto
                                              AND slrlln = vo.sdlnid
@@ -160,14 +141,10 @@ and sdco!='71000'
             do.sddcto = 'DO'
         AND do.sdnxtr > 600
         AND do.sdlttr != '980' 
-        and FDBNNF||fddoco!='29261499285'
 AND f76b12te.slb76lnum||TRIM(slrcto)||trim(do.sdmcu) not in ('370893VO111000','370894VO111000')
 
-and do.sdco!='71000'
+
 --AND DO.SDDOCO='51641'
-
-
-
 
 ), temp2 AS (
     SELECT
@@ -177,16 +154,12 @@ and do.sdco!='71000'
 
         CASE
 
-        WHEN substr(sddcto, 1, 1) IN ( 'D' ) and   sdtrdj =to_number(to_char(sysdate, 'YYYYDDD')) - 1900000 THEN 'DEVOLUCAO HOJE'
         WHEN    to_char(to_date(data_rel, 'DD/MM/YYYY'), 'MMYYYY') !=  to_char(to_date((sdtrdj + 1900000), 'YYYYDDD'), 'MMYYYY')
 
              AND  substr(sddcto, 1, 1) IN ( 'D' )
                  AND sdnxtr > '600'
                  AND sdlttr != '980' THEN
                 'DEVOLUCAO ANT'
-
-              --when substr(sddcto, 1, 1) IN ( 'D' ) and   sdtrdj =to_number(to_char(sysdate, 'YYYYDDD')) - 1900000 THEN 'DEVOLUCAO HOJE'
-
             WHEN substr(sddcto, 1, 1) IN ( 'D' )
                  AND sdnxtr > '600'
                  AND sdlttr != '980' THEN
@@ -195,15 +168,15 @@ and do.sdco!='71000'
                  AND sdnxtr < '600'
                  AND sdlttr != '980' THEN
                 'DEVOLUCAO CARTEIRA'
-                  WHEN sdlttr != '980'
-                 AND sdnxtr > '617' AND data =to_number(to_char(sysdate, 'YYYYDDD')) - 1900000 THEN
-                'FATURANDO HOJE'
+
 
                                                          WHEN sdlttr != '980'
                  AND sdnxtr >= '616' AND data >=to_number(to_char(sysdate-6, 'YYYYDDD')) - 1900000 AND data !=to_number(to_char(sysdate, 'YYYYDDD')) - 1900000 THEN
                 'FATURADO'
 
-
+                  WHEN sdlttr != '980'
+                 AND sdnxtr > '617' AND data =to_number(to_char(sysdate, 'YYYYDDD')) - 1900000 THEN
+                'FATURANDO HOJE'
             WHEN sdlttr != '980'
                  AND sdnxtr > '617' THEN
                 'FATURADO'
@@ -268,7 +241,6 @@ and do.sdco!='71000'
 
 
         CASE
-
             WHEN fdnxtr >= '600'
                  AND slb76eprd != '0' THEN
                 to_char(to_date((slb76eprd + 1900000), 'YYYYDDD'), 'DD/MM/YYYY')
@@ -284,8 +256,6 @@ and do.sdco!='71000'
 
 
           CASE
-           WHEN substr(sddcto, 1, 1) IN ( 'D' ) THEN
-                to_char(to_date((sddrqj + 1900000), 'YYYYDDD'), 'MM/YYYY')
             WHEN fdnxtr >= '600'
                  AND slb76eprd != '0'
                  AND slb76eprd IS NOT NULL THEN
@@ -336,35 +306,18 @@ and do.sdco!='71000'
         TRIM(cad.pnptd)                                                    AS condicao_pag_cadastro,
         TRIM(ped.pnptd)                                                    AS cond_pag_pedido,
         TRIM(sdlitm)                                                       AS cod,
-		CASE 
-		WHEN SDAN8='3612' THEN  TRIM(sddsc1)
-		ELSE 
         ( TRIM(sddsc1)
           || ' '
-          || TRIM(sddsc2) )                                                 
-		  END descricao,
-
-
+          || TRIM(sddsc2) )                                                  AS descricao,
         sduom2                                                             AS um_princ,
         sduom4                                                             AS um,
         CASE
-		WHEN sddcto='CV' AND TRIM(SDLNTY) IN ('N','S') THEN 1
             WHEN sddcto = 'DO' THEN
                 ( sdpqor / 10000 )
             ELSE
                 sdpqor / 10000
         END                                                                qtd,
-
-
-
-
-		sduprc / 10000   preco_unitario,
-
-	 case
-	 WHEN SDDCTO='SX' AND SDNXTR>'600' THEN ROUND(((((NVL(fhBFRT/100,0))/NVL(FHGDVL/100,1))*FDAEXP/100) + (((NVL(fhBSEG/100,0))/NVL(FHGDVL/100,1))*FDAEXP/100) +FDAEXP/100 ) /(FDUORG/10000),6)
-	 ELSE 
-	 sduprc / 10000   END preco_unitario2,
-
+        sduprc / 10000                                                     preco_unitario,
         round(nvl(iecsl,0) / 10000, 2)                                            AS material,
         councs / 10000                                                     AS custo_unitario,
 
@@ -372,23 +325,56 @@ and do.sdco!='71000'
 
 
         CASE
-            WHEN trim(destino.aladds) IN ( 'EX' ) THEN ( sduprc / 10000 )
-            WHEN fdtxr1 IS NOT NULL AND sjbcfc = 'ISE' THEN ( ( 100 - fdtxr1 / 1000 ) * 0.01 ) * ( sduprc / 10000 )
-            WHEN fdtxr1 IS NOT NULL  AND sjbcfc != 'ISE' THEN ( ( 100 - fdtxr1 / 1000 - 9.25 ) * 0.01 ) * ( sduprc / 10000 )   -    (( (( 100 - fdtxr1 / 1000 ) * 0.01 ) * ( sduprc / 10000 )) *0.0925)
-            WHEN com_curto.tbtxr2 IS NOT NULL  AND destino.aladds = remetent.aladds AND sjbctf != '04' AND sjbcfc = 'ISE' AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1' THEN ( ( 100 - com_curto.tbtxr1 / 1000 ) * 0.01 ) * ( sduprc / 10000 )
-            WHEN com_curto.tbtxr2 IS NOT NULL  AND destino.aladds != remetent.aladds AND sjbctf != '04'  AND sjbcfc = 'ISE' AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1' THEN ( ( 100 - com_curto.tbtxr2 / 1000 ) * 0.01 ) * ( sduprc / 10000 )
-            WHEN sem_curto.tbtxr2 IS NOT NULL   AND destino.aladds = remetent.aladds AND sjbctf != '04'  AND sjbcfc = 'ISE' AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1' THEN  ( ( 100 - sem_curto.tbtxr1 / 1000 ) * 0.01 ) * ( sduprc / 10000 )
-            WHEN sem_curto.tbtxr2 IS NOT NULL   AND destino.aladds != remetent.aladds  AND sjbctf != '04' AND sjbcfc = 'ISE' AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1' THEN ( ( 100 - sem_curto.tbtxr2 / 1000 ) * 0.01 ) * ( sduprc / 10000 )
-            WHEN com_curto.tbtxr2 IS NOT NULL  AND destino.aladds = remetent.aladds AND sjbctf != '04'  AND sjbcfc != 'ISE' AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1' THEN ( ( 100 - com_curto.tbtxr1 / 1000  ) * 0.01 ) * ( sduprc / 10000 )  -    (( ( ( 100 - com_curto.tbtxr1 / 1000  ) * 0.01 )* ( sduprc / 10000 )) *0.0925)
-            WHEN com_curto.tbtxr2 IS NOT NULL  AND destino.aladds != remetent.aladds  AND sjbctf != '04'  AND sjbcfc != 'ISE' AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1' THEN ( ( 100 - com_curto.tbtxr2 / 1000  ) * 0.01 ) * ( sduprc / 10000 ) -   (( ( ( 100 - com_curto.tbtxr2 / 1000  ) * 0.01 )* ( sduprc / 10000 )) *0.0925)
-            WHEN sem_curto.tbtxr2 IS NOT NULL  AND destino.aladds = remetent.aladds  AND sjbctf != '04'  AND sjbcfc != 'ISE' AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1' THEN ( ( 100 - sem_curto.tbtxr1 / 1000 - 9.25 ) * 0.01 ) * ( sduprc / 10000 )   -   (( ( ( 100 - sem_curto.tbtxr1 / 1000  ) * 0.01 )* ( sduprc / 10000 )) *0.0925)
-            WHEN sem_curto.tbtxr2 IS NOT NULL  AND destino.aladds != remetent.aladds  AND sjbctf != '04'  AND sjbcfc != 'ISE' AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1' THEN  ( ( 100 - sem_curto.tbtxr2 / 1000 - 9.25 ) * 0.01 ) * ( sduprc / 10000 ) -   (( ( ( 100 - sem_curto.tbtxr2 / 1000  ) * 0.01 )* ( sduprc / 10000 )) *0.0925)
+            WHEN trim(destino.aladds) IN ( 'EX' ) THEN
+                ( sduprc / 10000 )
+            WHEN fdtxr1 IS NOT NULL
+                 AND sjbcfc = 'ISE' THEN
+                ( ( 100 - fdtxr1 / 1000 ) * 0.01 ) * ( sduprc / 10000 )
+            WHEN fdtxr1 IS NOT NULL
+                 AND sjbcfc != 'ISE' THEN
+                ( ( 100 - fdtxr1 / 1000 - 9.25 ) * 0.01 ) * ( sduprc / 10000 )   -    (( (( 100 - fdtxr1 / 1000 ) * 0.01 ) * ( sduprc / 10000 )) *0.0925)
+            WHEN com_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds = remetent.aladds
+                 AND sjbctf != '04'
+                 AND sjbcfc = 'ISE' THEN
+                ( ( 100 - com_curto.tbtxr1 / 1000 ) * 0.01 ) * ( sduprc / 10000 )
+            WHEN com_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds != remetent.aladds
+                 AND sjbctf != '04'
+                 AND sjbcfc = 'ISE' THEN
+                ( ( 100 - com_curto.tbtxr2 / 1000 ) * 0.01 ) * ( sduprc / 10000 )
+            WHEN sem_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds = remetent.aladds
+                 AND sjbctf != '04'
+                 AND sjbcfc = 'ISE' THEN
+                ( ( 100 - sem_curto.tbtxr1 / 1000 ) * 0.01 ) * ( sduprc / 10000 )
+            WHEN sem_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds != remetent.aladds
+                 AND sjbctf != '04'
+                 AND sjbcfc = 'ISE' THEN
+                ( ( 100 - sem_curto.tbtxr2 / 1000 ) * 0.01 ) * ( sduprc / 10000 )
+            WHEN com_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds = remetent.aladds
+                 AND sjbctf != '04'
+                 AND sjbcfc != 'ISE' THEN
+                ( ( 100 - com_curto.tbtxr1 / 1000  ) * 0.01 ) * ( sduprc / 10000 )  -    (( ( ( 100 - com_curto.tbtxr1 / 1000  ) * 0.01 )* ( sduprc / 10000 )) *0.0925)
+            WHEN com_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds != remetent.aladds
+                 AND sjbctf != '04'
+                 AND sjbcfc != 'ISE' THEN
+                ( ( 100 - com_curto.tbtxr2 / 1000  ) * 0.01 ) * ( sduprc / 10000 ) -   (( ( ( 100 - com_curto.tbtxr2 / 1000  ) * 0.01 )* ( sduprc / 10000 )) *0.0925)
+            WHEN sem_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds = remetent.aladds
+                 AND sjbctf != '04'
+                 AND sjbcfc != 'ISE' THEN
+                ( ( 100 - sem_curto.tbtxr1 / 1000 - 9.25 ) * 0.01 ) * ( sduprc / 10000 )   -   (( ( ( 100 - sem_curto.tbtxr1 / 1000  ) * 0.01 )* ( sduprc / 10000 )) *0.0925)
+            WHEN sem_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds != remetent.aladds
+                 AND sjbctf != '04'
+                 AND sjbcfc != 'ISE' THEN
+                ( ( 100 - sem_curto.tbtxr2 / 1000 - 9.25 ) * 0.01 ) * ( sduprc / 10000 ) -   (( ( ( 100 - sem_curto.tbtxr2 / 1000  ) * 0.01 )* ( sduprc / 10000 )) *0.0925)
 
-
-WHEN SJBCFC!='ISE' THEN (SDUPRC/10000 )*0.9075
-WHEN SJBCFC='ISE'   THEN (SDUPRC/10000 ) 
-
-		else  ( nvl(sduprc,0) / 10000 )
+                                                         else  ( nvl(sduprc,0) / 10000 )
         END                                                                preco_unitario_net,
 
 
@@ -397,23 +383,32 @@ WHEN SJBCFC='ISE'   THEN (SDUPRC/10000 )
 
 
 
-
-
-
-
-
         CASE
-            WHEN destino.aladds IN ( 'EX' ) THEN  '0%'
-            WHEN fdtxr1 IS NOT NULL THEN  fdtxr1 / 1000 || '%'
-            WHEN com_curto.tbtxr2 IS NOT NULL AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1'   AND destino.aladds = remetent.aladds  AND sjbctf != '04' THEN com_curto.tbtxr1 / 1000|| '%'
-            WHEN com_curto.tbtxr2 IS NOT NULL AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1'  AND destino.aladds != remetent.aladds AND sjbctf != '04' THEN com_curto.tbtxr2 / 1000 || '%'
-            WHEN sem_curto.tbtxr2 IS NOT NULL AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1'  AND destino.aladds = remetent.aladds AND sjbctf != '04' THEN sem_curto.tbtxr1 / 1000|| '%'
-            WHEN sem_curto.tbtxr2 IS NOT NULL AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1'  AND destino.aladds != remetent.aladds AND sjbctf != '04' THEN sem_curto.tbtxr2 / 1000 || '%'
-			else 0||'%'
+            WHEN destino.aladds IN ( 'EX' ) THEN
+                '0%'
+            WHEN fdtxr1 IS NOT NULL THEN
+                fdtxr1 / 1000 || '%'
+            WHEN com_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds = remetent.aladds
+                 AND sjbctf != '04' THEN
+                com_curto.tbtxr1 / 1000
+                || '%'
+            WHEN com_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds != remetent.aladds
+                 AND sjbctf != '04' THEN
+                com_curto.tbtxr2 / 1000
+                || '%'
+            WHEN sem_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds = remetent.aladds
+                 AND sjbctf != '04' THEN
+                sem_curto.tbtxr1 / 1000
+                || '%'
+            WHEN sem_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds != remetent.aladds
+                 AND sjbctf != '04' THEN
+                sem_curto.tbtxr2 / 1000
+                || '%'
         END                                                                icms_p,
-
-
-
         CASE
             WHEN sjbcfc != 'ISE' THEN
                 '9,25%'
@@ -572,7 +567,6 @@ END COF,
         nvl(fdbrep / 100, 0)                                               AS difal,
         fdbipi / 100                                                       AS valor_ipi,
       sdaexp / 100                                                       AS total,
-
         CASE
             WHEN TRIM(fhfrth) IN ( 'E', 'D' ) THEN
                 sdaexp / 100
@@ -582,31 +576,53 @@ END COF,
                 sdaexp / 100
         END                                                                bruto,
         ( councs / 10000 ) * ( sdpqor / 10000 )                            AS custo_total,
-
-
-
-
         CASE
-            WHEN destino.aladds IN ( 'EX' ) THEN  0
-            WHEN fdbicm IS NOT NULL THEN fdbicm / 100
-            WHEN sjbctf = '04' THEN   0
-            WHEN fdbicm IS NOT NULL    AND sddcto = 'DO'  THEN  fdbicm / 100
-            WHEN com_curto.tbtxr2 IS NOT NULL AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1'  AND destino.aladds = remetent.aladds  AND sjbctf != '04'  AND sddcto = 'DO' THEN ( com_curto.tbtxr1 / 1000 * 0.01 ) * sdaexp / 100
-            WHEN com_curto.tbtxr2 IS NOT NULL AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1'  AND destino.aladds != remetent.aladds   AND sjbctf != '04'   AND sddcto = 'DO' THEN ( com_curto.tbtxr2 / 1000 * 0.01 ) * sdaexp / 100 
-            WHEN sem_curto.tbtxr2 IS NOT NULL AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1' AND destino.aladds = remetent.aladds   AND sjbctf != '04' AND sddcto = 'DO' THEN ( sem_curto.tbtxr1 / 1000 * 0.01 ) * sdaexp / 100
-            WHEN sem_curto.tbtxr2 IS NOT NULL AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1'  AND destino.aladds != remetent.aladds  AND sjbctf != '04' AND sddcto = 'DO' THEN ( sem_curto.tbtxr2 / 1000 * 0.01 ) * sdaexp / 100 
-            WHEN com_curto.tbtxr2 IS NOT NULL AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1' AND destino.aladds = remetent.aladds AND sjbctf != '04' THEN ( com_curto.tbtxr1 / 1000 * 0.01 ) * sdaexp / 100
-            WHEN com_curto.tbtxr2 IS NOT NULL AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1' AND destino.aladds != remetent.aladds AND sjbctf != '04' THEN ( com_curto.tbtxr2 / 1000 * 0.01 ) * sdaexp / 100
-            WHEN sem_curto.tbtxr2 IS NOT NULL AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1'  AND destino.aladds = remetent.aladds  AND sjbctf != '04' THEN ( sem_curto.tbtxr1 / 1000 * 0.01 ) * sdaexp / 100
-            WHEN sem_curto.tbtxr2 IS NOT NULL AND F7615B.TNBFII= '1' AND F76011.AIBFII = '1' AND F76B18.FCBFII='1' AND F7617B.TSBFII='1'  AND destino.aladds != remetent.aladds  AND sjbctf != '04' THEN ( sem_curto.tbtxr2 / 1000 * 0.01 ) * sdaexp / 100
-       else 0
-	   END   icms_total,
-
-
-
-
-
-
+            WHEN destino.aladds IN ( 'EX' ) THEN
+                0
+            WHEN fdbicm IS NOT NULL THEN
+                fdbicm / 100
+            WHEN sjbctf = '04' THEN
+                0
+            WHEN fdbicm IS NOT NULL
+                 AND sddcto = 'DO' THEN
+                fdbicm / 100
+            WHEN com_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds = remetent.aladds
+                 AND sjbctf != '04'
+                 AND sddcto = 'DO' THEN
+                ( com_curto.tbtxr1 / 1000 * 0.01 ) * sdaexp / 100 --* - 1
+            WHEN com_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds != remetent.aladds
+                 AND sjbctf != '04'
+                 AND sddcto = 'DO' THEN
+                ( com_curto.tbtxr2 / 1000 * 0.01 ) * sdaexp / 100 --* - 1
+            WHEN sem_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds = remetent.aladds
+                 AND sjbctf != '04'
+                 AND sddcto = 'DO' THEN
+                ( sem_curto.tbtxr1 / 1000 * 0.01 ) * sdaexp / 100 --* - 1
+            WHEN sem_curto.tbtxr2 IS NOT NULL
+                AND destino.aladds != remetent.aladds
+                 AND sjbctf != '04'
+                 AND sddcto = 'DO' THEN
+                ( sem_curto.tbtxr2 / 1000 * 0.01 ) * sdaexp / 100 --* - 1
+            WHEN com_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds = remetent.aladds
+                 AND sjbctf != '04' THEN
+                ( com_curto.tbtxr1 / 1000 * 0.01 ) * sdaexp / 100
+            WHEN com_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds != remetent.aladds
+                 AND sjbctf != '04' THEN
+                ( com_curto.tbtxr2 / 1000 * 0.01 ) * sdaexp / 100
+            WHEN sem_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds = remetent.aladds
+                 AND sjbctf != '04' THEN
+                ( sem_curto.tbtxr1 / 1000 * 0.01 ) * sdaexp / 100
+            WHEN sem_curto.tbtxr2 IS NOT NULL
+                 AND destino.aladds != remetent.aladds
+                 AND sjbctf != '04' THEN
+                ( sem_curto.tbtxr2 / 1000 * 0.01 ) * sdaexp / 100
+        END                                                                icms_total,
         TRIM(srp5.drdl01)                                                  AS marca_propria,
         TRIM(srp1.drdl01)                                                  AS business_unit,
         TRIM(srp2.drdl01)                                                  AS tecnologia,
@@ -673,37 +689,21 @@ END COF,
         nvl(fdbrep,0) / 100                                                       desc_repasse,
         nvl(fdbdiz,0) / 100                                                       desc_zf,
         nvl(fdbfrt, 0) / 100 + nvl(fdbseg, 0) / 100 + nvl(fdbdfn, 0) / 100 AS despesa_frete,
-        --Condição intercompany
         CASE
-        -- condição para remover OCQ chile do intercompani solicitação do Edemir 30/01/2025
-        WHEN sdan8 = 71000 THEN ''
-         --caso o tipo do pedido seja VU categoriza por INTERCOMPANY
-        WHEN SDDCTO ='VU' THEN 'INTERCOMPANY'
-        --Caso seja tipo do pedido VH e codigo do cliente 51000 retorna vazio  
-        When cliente.abalph like 'NITRIFLEX%' and imlitm like 'EST%' and SDRSDJ >= '125152' then ''
-        WHEN SDDCTO='VH' and sdan8='51000' then ''
-        -- Se o nome do Cliente contem NITRIFLEX e tenha 'EST', 'AAC' Intercompany revenda
-        WHEN cliente.abalph LIKE 'NITRIFLEX%'
-                AND TRIM(imlitm) IN ( 'EST', 'AAC' ) THEN
-            'INTERCOMPANY REVENDA'
-        -- Se o nome do Cliente contem MAZA e tenha 'EST' e fdmcu = 111005
-        WHEN cliente.abalph LIKE 'MAZA %'
-                AND TRIM(imlitm) IN ( 'EST' )
-                AND TRIM(fdmcu) = '111005' THEN
-            'INTERCOMPANY REVENDA'
-        -- Se o nome do Cliente contem 'OSWALDO CRUZ QU', 'VETTA QUIMICA I', 'CHEMBRO QUIMICA' categoriza por INTERCOMPANY
-        WHEN substr(cliente.abalph, 1, 15) IN ( 'OSWALDO CRUZ QU', 'VETTA QUIMICA I', 'CHEMBRO QUIMICA' ) THEN
-            'INTERCOMPANY'
-
-        WHEN imsrp1 = '200'
-            AND TRIM(aiac10) IS NOT NULL
-            AND cliente.abalph NOT LIKE 'NITRIFLEX%'
-            AND cliente.abalph NOT LIKE 'MAZA %' THEN
-            'INTERCOMPANY REVENDA'
-        WHEN SDDCTO='VN' AND IMSRP1 IN ('200','480') THEN  'INTERCOMPANY REVENDA'
-        WHEN SDDCTO ='VU' AND  IMSRP2='278' THEN 'INTERCOMPANY'
-        WHEN SDDCTO ='VN' AND  IMSRP2='278' THEN 'INTERCOMPANY REVENDA'
-
+            WHEN cliente.abalph LIKE 'NITRIFLEX%'
+                 AND TRIM(imlitm) IN ( 'EST', 'AAC' ) THEN
+                'INTERCOMPANY REVENDA'
+            WHEN cliente.abalph LIKE 'MAZA %'
+                 AND TRIM(imlitm) IN ( 'EST' )
+                 AND TRIM(fdmcu) = '111005' THEN
+                'INTERCOMPANY REVENDA'
+            WHEN substr(cliente.abalph, 1, 15) IN ( 'OSWALDO CRUZ QU', 'VETTA QUIMICA I', 'CHEMBRO QUIMICA' ) THEN
+                'INTERCOMPANY'
+            WHEN imsrp1 = '200'
+                 AND TRIM(aiac10) IS NOT NULL
+                 AND cliente.abalph NOT LIKE 'NITRIFLEX%'
+                 AND cliente.abalph NOT LIKE 'MAZA %' THEN
+                'INTERCOMPANY REVENDA'
         END                                                                intercompany
 
 
@@ -725,9 +725,7 @@ END COF,
                         WHEN SDNXTR = 550 THEN 'AG. CONF. DE CARGA'
        WHEN SDNXTR = 595 THEN 'AG. GERAÇÃO DA NOTA' 
        WHEN SDNXTR = 596 THEN 'AG. GERAÇÃO DO XML'
-       END STATUS,
-case when NVL(fhBFRT,0)='0' then 0 else ((NVL(fhBFRT/100,0))/NVL(FHGDVL/100,1))*FDAEXP/100 end VALOR_FRETE,
-case when NVL(fhBSEG,0)='0' then 0 else ((NVL(fhBSEG/100,0))/NVL(FHGDVL/100,1))*FDAEXP/100 end VALOR_SEGURO
+       END STATUS
 
     FROM
         proddta.f4211
@@ -760,7 +758,7 @@ case when NVL(fhBSEG,0)='0' then 0 else ((NVL(fhBSEG/100,0))/NVL(FHGDVL/100,1))*
                                          AND (comcu) = (sdmcu)
         LEFT JOIN proddta.f30026 ON coitm = ieitm
                                           AND iecost = 'A1'
-                                          AND TRIM(iemmcu)  IN ('111000') AND IELEDG='07'
+                                          AND TRIM(iemmcu)  IN ('111000', '511000') AND IELEDG='07'
         LEFT JOIN proddta.f76b200 ON dpbnop = fdbnop
                                            AND dpbsop = fdbsop
                                            AND dpfco = fdfco
@@ -849,16 +847,12 @@ case when NVL(fhBSEG,0)='0' then 0 else ((NVL(fhBSEG/100,0))/NVL(FHGDVL/100,1))*
         LEFT JOIN proddta.F0150   ON MAAN8=SDAN8
         LEFT JOIN proddta.f0101  economico   ON economico.aban8 = MAPA8
 
- left outer join PRODDTA.F7615B  F7615B  on  SJBNOP = F7615B.TNBNOP and	 SJBSOP=F7615B.TNBSOP
- left outer join PRODDTA.F76011  F76011  on trim(SDAN8)= trim(F76011.AIAN8)
- left outer join PRODDTA.F7617B  F7617B  on  F76422.SJBCTF = F7617B.TSBCTF
-
 
 
     WHERE
             1 = 1
 
-and sddoco NOT IN ('1012819','1425057','64064')
+and sddoco!='1012819'
 
         AND sdlttr != '980'
         AND substr(sdlnty, 1, 1) != 'B'
@@ -866,15 +860,13 @@ and sddoco NOT IN ('1012819','1425057','64064')
         AND sddcto IN ( 'SG', 'SX', 'SV', 'VI', 'VO',
                          'VZ', 'V5', 'V7', 'V8',
                         'VA', 'VF', 'VG', 'VH', 'SO',
-                        'SO', 'DO', 'CV','VN','VY','VU','VQ','V0','V3' ) --INCLUIDO 'VQ','V0','V3' para aparecer pedidos MCLAW
+                        'SO', 'DO', 'CV','VN','VY','VU' )
         AND (sddcto)
             || sdnxtr NOT IN ( 'DO540', 'DO560', 'DO595', 'DO595', 'DO596',
                                'DO597', 'DO520' )
 
         AND sdaexp != '0'
 
-
-and  sdco!='71000'
 --AND SDDOCO='51641'
     ORDER BY
         data,
@@ -980,8 +972,6 @@ and  sdco!='71000'
         p_icms_fora,
         despesa_frete,
         icms_total,
-		pis,
-		cof,
         cod_vendedor,
         vendedor,
         frete,
@@ -1009,15 +999,10 @@ and  sdco!='71000'
         um,
         CASE WHEN tipo_pedido='CV' THEN 0 ELSE  qtd END qtd,
 
-
-
-
-
         preco_unitario,
-		preco_unitario2,
          --CASE WHEN TIPO='CARTEIRA' THEN   ROUND(((TOTAL-ICMS_TOTAL) * (CASE WHEN NVL(PIS,0)!=0 THEN 0.9075  ELSE 0 END  ))  / QTD,4)    ELSE ROUND((TOTAL-ICMS_TOTAL-PIS-COF)/QTD ,4)END  PRECO_UNITARIO_NET ,
 
-CASE when TRIM(UF)='EX' THEN preco_unitario WHEN TIPO='CARTEIRA' THEN   ROUND(((TOTAL-ICMS_TOTAL) * (CASE WHEN NVL(PIS,0)!=0 THEN 0.9075  ELSE 1 END  ))  / QTD,4) WHEN TIPO IN ('DEVOLUCAO ANT','DEVOLUCAO')   THEN -ROUND((TOTAL+ICMS_TOTAL+PIS+COF)/-QTD ,4) ELSE ROUND((TOTAL-ICMS_TOTAL-PIS-COF)/QTD ,4)END  PRECO_UNITARIO_NET ,
+CASE when TRIM(UF)='EX' THEN preco_unitario WHEN TIPO='CARTEIRA' THEN   ROUND(((TOTAL-ICMS_TOTAL) * (CASE WHEN NVL(PIS,0)!=0 THEN 0.9075  ELSE 0 END  ))  / QTD,4) WHEN TIPO IN ('DEVOLUCAO ANT','DEVOLUCAO')   THEN -ROUND((TOTAL+ICMS_TOTAL+PIS+COF)/-QTD ,4) ELSE ROUND((TOTAL-ICMS_TOTAL-PIS-COF)/QTD ,4)END  PRECO_UNITARIO_NET ,
 
         material,
         CASE WHEN tipo_pedido='CV' THEN 0 ELSE  custo_unitario END custo_unitario,
@@ -1029,11 +1014,9 @@ CASE when TRIM(UF)='EX' THEN preco_unitario WHEN TIPO='CARTEIRA' THEN   ROUND(((
         difal,
         imna,
         round(preco_unitario * qtd, 4)          AS receita_bruta_total,
-        --CASE WHEN UF='EX' THEN TOTAL  WHEN TIPO='CARTEIRA' THEN   ROUND(((TOTAL-ICMS_TOTAL) * (CASE WHEN NVL(PIS,0)!=0 THEN 0.9075  ELSE 1 END  ))  ,4)  WHEN TIPO IN ('DEVOLUCAO ANT','DEVOLUCAO')  THEN ROUND((TOTAL+ICMS_TOTAL+PIS+COF) ,4)  ELSE ROUND((TOTAL-ICMS_TOTAL-PIS-COF) ,4) END  RECEITA_NET_TOTAL ,
-
-        CASE WHEN UF='EX' THEN TOTAL  WHEN TIPO='CARTEIRA' THEN   ROUND(((TOTAL-ICMS_TOTAL) * (CASE WHEN NVL(PIS,0)!=0 THEN 0.9075  ELSE 1 END  ))  ,4)  WHEN TIPO IN ('DEVOLUCAO ANT','DEVOLUCAO')  THEN ROUND((TOTAL+ICMS_TOTAL+PIS+COF) ,4)  ELSE ROUND((TOTAL-ICMS_TOTAL-PIS-COF) ,4) END  RECEITA_NET_TOTAL ,
-
-		CASE WHEN tipo_pedido='CV' THEN 0 ELSE  nvl(round(material * qtd, 4),0)                END custo_material_total,
+        --CASE WHEN TIPO='CARTEIRA' THEN   ROUND(((TOTAL-ICMS_TOTAL) * (CASE WHEN NVL(PIS,0)!=0 THEN 0.9075  ELSE 0 END  ))  ,4)    ELSE ROUND((TOTAL-ICMS_TOTAL-PIS-COF) ,4)END  RECEITA_NET_TOTAL ,
+          CASE WHEN UF='EX' THEN TOTAL  WHEN TIPO='CARTEIRA' THEN   ROUND(((TOTAL-ICMS_TOTAL) * (CASE WHEN NVL(PIS,0)!=0 THEN 0.9075  ELSE 0 END  ))  ,4)  WHEN TIPO IN ('DEVOLUCAO ANT','DEVOLUCAO')  THEN ROUND((TOTAL+ICMS_TOTAL+PIS+COF) ,4)  ELSE ROUND((TOTAL-ICMS_TOTAL-PIS-COF) ,4) END  RECEITA_NET_TOTAL ,
+        CASE WHEN tipo_pedido='CV' THEN 0 ELSE  nvl(round(material * qtd, 4),0)                END custo_material_total,
         CASE WHEN tipo_pedido='CV' THEN 0 ELSE  nvl(round(custo_unitario * qtd, 4) ,0)         END  custo_total_2,
         business_unit,
         tecnologia,
@@ -1070,8 +1053,6 @@ CASE when TRIM(UF)='EX' THEN preco_unitario WHEN TIPO='CARTEIRA' THEN   ROUND(((
 ,PAIS
 ,GRUPO_ECO
 ,STATUS
-,VALOR_FRETE
-,VALOR_SEGURO
     FROM
         temp2
         LEFT JOIN icms_entrada ON TRIM(lote) = lote_icent
@@ -1094,13 +1075,10 @@ WHERE IVXRT= 'A'
 
       select 
                 distinct 
-
-      ORIGEM, P_ICMS_FORA, DESPESA_FRETE, ICMS_TOTAL,pis,cof, COD_VENDEDOR, VENDEDOR, FRETE, LOTE, LINHA, REFERENCIA_DEV, TIPO, ULT_ST, PROX_ST, DATA_FATURAMENTO, DATA, DATA_INCLUSAO, MES_ANO, DATA_CLIENTE, SOLICITADO, PEDIDO, NOTA, CODIGO_CLIENTE, CLIENTE, UF, CONDICAO_PAG_CADASTRO, COND_PAG_PEDIDO, COD, DESCRICAO, UM, QTD, PRECO_UNITARIO,PRECO_UNITARIO2, PRECO_UNITARIO_NET, MATERIAL, CUSTO_UNITARIO, ICMS_P, PIS_COF_P, IPI_P, ST, DIFAL, IMNA, RECEITA_BRUTA_TOTAL, RECEITA_NET_TOTAL, CUSTO_MATERIAL_TOTAL, CUSTO_TOTAL_2, BUSINESS_UNIT, TECNOLOGIA, UN_NEG, FILIAL, FILIAL2, COD_TRANSP, TRANSP, TIPO_PEDIDO, OBS_PED, UM_PRINC, ICMS_ENTRADA, TRIB_SUBST, DESC_REPASSE, DESC_ZF, FORN, FORN_PRIMEIRO, VALOR_IPI, INTERCOMPANY, ULT_DATA,CIDADE,PAIS,GRUPO_ECO,STATUS,
+      ORIGEM, P_ICMS_FORA, DESPESA_FRETE, ICMS_TOTAL, COD_VENDEDOR, VENDEDOR, FRETE, LOTE, LINHA, REFERENCIA_DEV, TIPO, ULT_ST, PROX_ST, DATA_FATURAMENTO, DATA, DATA_INCLUSAO, MES_ANO, DATA_CLIENTE, SOLICITADO, PEDIDO, NOTA, CODIGO_CLIENTE, CLIENTE, UF, CONDICAO_PAG_CADASTRO, COND_PAG_PEDIDO, COD, DESCRICAO, UM, QTD, PRECO_UNITARIO, PRECO_UNITARIO_NET, MATERIAL, CUSTO_UNITARIO, ICMS_P, PIS_COF_P, IPI_P, ST, DIFAL, IMNA, RECEITA_BRUTA_TOTAL, RECEITA_NET_TOTAL, CUSTO_MATERIAL_TOTAL, CUSTO_TOTAL_2, BUSINESS_UNIT, TECNOLOGIA, UN_NEG, FILIAL, FILIAL2, COD_TRANSP, TRANSP, TIPO_PEDIDO, OBS_PED, UM_PRINC, ICMS_ENTRADA, TRIB_SUBST, DESC_REPASSE, DESC_ZF, FORN, FORN_PRIMEIRO, VALOR_IPI, INTERCOMPANY, ULT_DATA,CIDADE,PAIS,GRUPO_ECO,STATUS,
 trim(IVLITM) as ITEM_CONVERSAO,
 trim(F4101.IMDSC1) as DESCRICAO_R,
 trim(F4101.IMSEG1) as COD_R
-,VALOR_FRETE
-,VALOR_SEGURO
       from vendas
 
   left outer join F4104_MAX2 F4104  on trim(F4104.IVCITM) =  decode(instr(trim(COD),'.'),'0',trim(COD),substr(trim(COD),'1',instr(trim(COD),'.')-1))  and F4104.IVXRT= 'A' 
@@ -1118,15 +1096,15 @@ trim(F4101.IMSEG1) as COD_R
 
 
 
+
 SELECT  
 B.DATA DATA_G, 
   TRIM(B.ITEM) AS COD_ITEM_G,
                (TO_NUMBER(B.CUSTO_REAIS)) AS CUSTO_GERENCIAL
-                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV, (TO_NUMBER(NVL(B.CUSTO_MATERIAL,0))) AS CUSTO_MATERIAL 
-
+                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV 
             ,B.LISTA
 
-FROM  PUBDB.TEMP_CUSTO_ULTMES B 
+FROM  proddta.TEMP_HISTORICO_CUSTO B 
 WHERE (LISTA)='NET'
 
 
@@ -1140,10 +1118,10 @@ B.DATA DATA_G,
   TRIM(B.ITEM) AS COD_ITEM_G,
 
           (TO_NUMBER(B.CUSTO_REAIS)) AS CUSTO_GERENCIAL
-                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV, (TO_NUMBER(NVL(B.CUSTO_MATERIAL,0))) AS CUSTO_MATERIAL 
+                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV 
             ,B.LISTA
 
-FROM PUBDB.TEMP_CUSTO_ULTMES B  
+FROM proddta.TEMP_HISTORICO_CUSTO B  
   WHERE   TRIM(B.LISTA)='M'
 
 UNION ALL
@@ -1153,10 +1131,10 @@ B.DATA DATA_G,
   TRIM(B.ITEM) AS COD_ITEM_G,
 
           (TO_NUMBER(B.CUSTO_REAIS)) AS CUSTO_GERENCIAL
-                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV, (TO_NUMBER(NVL(B.CUSTO_MATERIAL,0))) AS CUSTO_MATERIAL 
+                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV 
      ,B.LISTA
-FROM  PUBDB.TEMP_CUSTO_ULTMES B  
-WHERE  NOT EXISTS (SELECT 1 FROM PUBDB.TEMP_CUSTO_ULTMES C  WHERE (B.ITEM)=(C.ITEM)  AND TRIM(C.LISTA) IN ('M') AND B.DATA=C.DATA)
+FROM  proddta.TEMP_HISTORICO_CUSTO B  
+WHERE  NOT EXISTS (SELECT 1 FROM proddta.TEMP_HISTORICO_CUSTO C  WHERE (B.ITEM)=(C.ITEM)  AND TRIM(C.LISTA) IN ('M') AND B.DATA=C.DATA)
 AND TRIM(B.LISTA)='M1'
 
 UNION ALL
@@ -1166,10 +1144,10 @@ B.DATA DATA_G,
   TRIM(B.ITEM) AS COD_ITEM_G,
 
           (TO_NUMBER(B.CUSTO_REAIS)) AS CUSTO_GERENCIAL
-                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV, (TO_NUMBER(NVL(B.CUSTO_MATERIAL,0))) AS CUSTO_MATERIAL 
+                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV 
      ,B.LISTA
-FROM  PUBDB.TEMP_CUSTO_ULTMES B  
-WHERE  NOT EXISTS (SELECT 1 FROM PUBDB.TEMP_CUSTO_ULTMES C  WHERE (B.ITEM)=(C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1') AND B.DATA=C.DATA)
+FROM  proddta.TEMP_HISTORICO_CUSTO B  
+WHERE  NOT EXISTS (SELECT 1 FROM proddta.TEMP_HISTORICO_CUSTO C  WHERE (B.ITEM)=(C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1') AND B.DATA=C.DATA)
 AND TRIM(B.LISTA)='M2'
 
 UNION ALL
@@ -1179,10 +1157,10 @@ B.DATA DATA_G,
   TRIM(B.ITEM) AS COD_ITEM_G,
 
           (TO_NUMBER(B.CUSTO_REAIS)) AS CUSTO_GERENCIAL
-                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV, (TO_NUMBER(NVL(B.CUSTO_MATERIAL,0))) AS CUSTO_MATERIAL 
+                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV 
      ,B.LISTA
-FROM  PUBDB.TEMP_CUSTO_ULTMES B  
-WHERE  NOT EXISTS (SELECT 1 FROM PUBDB.TEMP_CUSTO_ULTMES C  WHERE (B.ITEM)=(C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1','M2') AND B.DATA=C.DATA)
+FROM  proddta.TEMP_HISTORICO_CUSTO B  
+WHERE  NOT EXISTS (SELECT 1 FROM proddta.TEMP_HISTORICO_CUSTO C  WHERE (B.ITEM)=(C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1','M2') AND B.DATA=C.DATA)
 AND TRIM(B.LISTA)='M3'
 
 UNION ALL
@@ -1192,10 +1170,10 @@ B.DATA DATA_G,
   TRIM(B.ITEM) AS COD_ITEM_G,
 
           (TO_NUMBER(B.CUSTO_REAIS)) AS CUSTO_GERENCIAL
-                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV, (TO_NUMBER(NVL(B.CUSTO_MATERIAL,0))) AS CUSTO_MATERIAL 
+                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV 
      ,B.LISTA
-FROM  PUBDB.TEMP_CUSTO_ULTMES B  
-WHERE  NOT EXISTS (SELECT 1 FROM PUBDB.TEMP_CUSTO_ULTMES C  WHERE (B.ITEM)=(C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1','M2','M3') AND B.DATA=C.DATA)
+FROM  proddta.TEMP_HISTORICO_CUSTO B  
+WHERE  NOT EXISTS (SELECT 1 FROM proddta.TEMP_HISTORICO_CUSTO C  WHERE (B.ITEM)=(C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1','M2','M3') AND B.DATA=C.DATA)
 AND TRIM(B.LISTA)='PM'
 
 
@@ -1209,10 +1187,10 @@ B.DATA DATA_G,
   TRIM(B.ITEM) AS COD_ITEM_G,
 
           (TO_NUMBER(B.CUSTO_REAIS)) AS CUSTO_GERENCIAL
-                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV, (TO_NUMBER(NVL(B.CUSTO_MATERIAL,0))) AS CUSTO_MATERIAL 
+                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV 
      ,B.LISTA
-FROM  PUBDB.TEMP_CUSTO_ULTMES B  
-WHERE  NOT EXISTS (SELECT 1 FROM PUBDB.TEMP_CUSTO_ULTMES C  WHERE (B.ITEM)=(C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1','M2','M3','PM') AND B.DATA=C.DATA)
+FROM  proddta.TEMP_HISTORICO_CUSTO B  
+WHERE  NOT EXISTS (SELECT 1 FROM proddta.TEMP_HISTORICO_CUSTO C  WHERE (B.ITEM)=(C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1','M2','M3','PM') AND B.DATA=C.DATA)
 AND (B.LISTA)='AT1'
 
 
@@ -1225,10 +1203,10 @@ B.DATA DATA_G,
   TRIM(B.ITEM) AS COD_ITEM_G,
 
           (TO_NUMBER(B.CUSTO_REAIS)) AS CUSTO_GERENCIAL
-                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV, (TO_NUMBER(NVL(B.CUSTO_MATERIAL,0))) AS CUSTO_MATERIAL 
+                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV 
      ,B.LISTA
-FROM  PUBDB.TEMP_CUSTO_ULTMES B  
-WHERE  NOT EXISTS (SELECT 1 FROM PUBDB.TEMP_CUSTO_ULTMES C  WHERE (B.ITEM)=(C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1','M2','M3','PM','AT1') AND B.DATA=C.DATA)
+FROM  proddta.TEMP_HISTORICO_CUSTO B  
+WHERE  NOT EXISTS (SELECT 1 FROM proddta.TEMP_HISTORICO_CUSTO C  WHERE (B.ITEM)=(C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1','M2','M3','PM','AT1') AND B.DATA=C.DATA)
 AND (B.LISTA)='AT2'       
 
 
@@ -1239,10 +1217,10 @@ B.DATA DATA_G,
   TRIM(B.ITEM) AS COD_ITEM_G,
 
           (TO_NUMBER(B.CUSTO_REAIS)) AS CUSTO_GERENCIAL
-                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV, (TO_NUMBER(NVL(B.CUSTO_MATERIAL,0))) AS CUSTO_MATERIAL 
+                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV 
      ,B.LISTA
-FROM  PUBDB.TEMP_CUSTO_ULTMES B  
-WHERE  NOT EXISTS (SELECT 1 FROM PUBDB.TEMP_CUSTO_ULTMES C  WHERE  (B.ITEM)= (C.ITEM)  AND  TRIM(C.LISTA) IN ('M','M1','M2','M3','PM','AT1','AT2') AND B.DATA=C.DATA)
+FROM  proddta.TEMP_HISTORICO_CUSTO B  
+WHERE  NOT EXISTS (SELECT 1 FROM proddta.TEMP_HISTORICO_CUSTO C  WHERE  (B.ITEM)= (C.ITEM)  AND  TRIM(C.LISTA) IN ('M','M1','M2','M3','PM','AT1','AT2') AND B.DATA=C.DATA)
 AND  (B.LISTA)='PA1'              
 
                     UNION ALL
@@ -1252,10 +1230,10 @@ B.DATA DATA_G,
   TRIM(B.ITEM) AS COD_ITEM_G,
 
           (TO_NUMBER(B.CUSTO_REAIS)) AS CUSTO_GERENCIAL
-                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV, (TO_NUMBER(NVL(B.CUSTO_MATERIAL,0))) AS CUSTO_MATERIAL 
+                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV 
      ,B.LISTA
-FROM  PUBDB.TEMP_CUSTO_ULTMES B 
-WHERE  NOT EXISTS (SELECT 1 FROM PUBDB.TEMP_CUSTO_ULTMES C  WHERE  (B.ITEM)= (C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1','M2','M3','PM','AT1','AT2','PA1') AND B.DATA=C.DATA)
+FROM  proddta.TEMP_HISTORICO_CUSTO B 
+WHERE  NOT EXISTS (SELECT 1 FROM proddta.TEMP_HISTORICO_CUSTO C  WHERE  (B.ITEM)= (C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1','M2','M3','PM','AT1','AT2','PA1') AND B.DATA=C.DATA)
 AND  (B.LISTA)='PA2'                       
 
                                               UNION ALL
@@ -1264,12 +1242,11 @@ SELECT
 B.DATA DATA_G, 
   TRIM(B.ITEM) AS COD_ITEM_G,
           (TO_NUMBER(B.CUSTO_REAIS)) AS CUSTO_GERENCIAL
-                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV, (TO_NUMBER(NVL(B.CUSTO_MATERIAL,0))) AS CUSTO_MATERIAL
+                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV 
      ,B.LISTA
-FROM  PUBDB.TEMP_CUSTO_ULTMES B  
-WHERE  NOT EXISTS (SELECT 1 FROM PUBDB.TEMP_CUSTO_ULTMES C  WHERE  (B.ITEM)= (C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1','M2','M3','PM','AT1','AT2','PA1','PA2') AND B.DATA=C.DATA)
+FROM  proddta.TEMP_HISTORICO_CUSTO B  
+WHERE  NOT EXISTS (SELECT 1 FROM proddta.TEMP_HISTORICO_CUSTO C  WHERE  (B.ITEM)= (C.ITEM)  AND TRIM(C.LISTA) IN ('M','M1','M2','M3','PM','AT1','AT2','PA1','PA2') AND B.DATA=C.DATA)
 AND  (B.LISTA)='PA5'          
-
 
 
 
@@ -1280,7 +1257,7 @@ AND  (B.LISTA)='PA5'
 SELECT  TO_CHAR(periodo,'MM/YYYY') MES_ANO_UTEIS,COUNT(periodo)  UTEIS_MES   FROM (
 SELECT  trunc(last_day(sysdate)) - (level-1) periodo from dual 
 connect BY level <=     to_number(   TO_DATE('31/12/2030','DD/MM/YYYY') - TO_DATE('01/01/2020','DD/MM/YYYY')    ) +30
-) where TO_CHAR(periodo,'d') not in ('1','7') and TO_CHAR(periodo,'DDMM') NOT IN ('0101','2104','0105','1906','0709','1210','0211','1511','2512')  and TO_CHAR(periodo,'DDMMYY') NOT IN ('010322','200223','210223','070423','090623','080923','131023','031123','120224','130224','290324','300524','090724','201124','241224','311224','030325','040325','180425','020525','200625','090725') GROUP BY TO_CHAR(periodo,'MM/YYYY')  
+) where TO_CHAR(periodo,'d') not in ('1','7') and TO_CHAR(periodo,'DDMM') NOT IN ('0101','2104','0105','1606','1706','0709','1210','0211','1511','2512','1411')  and TO_CHAR(periodo,'DDMMYY') NOT IN ('010322','200223','210223','070423','090623') GROUP BY TO_CHAR(periodo,'MM/YYYY')  
 
 
 
@@ -1291,7 +1268,7 @@ connect BY level <=     to_number(   TO_DATE('31/12/2030','DD/MM/YYYY') - TO_DAT
 select  TO_CHAR(SYSDATE,'MM/YYYY')  MES_HOJE_UTEIS,count(periodo)-1 UTEIS_HOJE  from (
 select trunc((sysdate)) - (level-1) periodo from dual 
 connect BY level <=     to_number((SYSDATE) - TO_DATE('01/'|| TO_CHAR((SYSDATE), 'MM/YYYY')   ,'DD/MM/YYYY')) + 1
-) where TO_CHAR(periodo,'d') not in ('1','7') and TO_CHAR(periodo,'DDMM') NOT IN ('0101','2104','0105','1906','0709','1210','0211','1511','2512')  and TO_CHAR(periodo,'DDMMYY') NOT IN ('010322','200223','210223','070423','090623','080923','131023','031123','120224','130224','290324','300524','090724','201124','241224','311224','030325','040325','180425','020525','200625','090725') 
+) where TO_CHAR(periodo,'d') not in ('1','7') and TO_CHAR(periodo,'DDMM') NOT IN ('0101','2104','0105','1606','1706','0709','1210','0211','1511','2512','1411')  and TO_CHAR(periodo,'DDMMYY') NOT IN ('010322','200223','210223','070423','090623')
 
 
 
@@ -1310,8 +1287,6 @@ DISTINCT
     nvl(pjs.p_icms_fora,0) p_icms_fora,
     nvl(pjs.despesa_frete,0) despesa_frete,
     nvl(pjs.icms_total,0) icms_total,
-	 nvl(pjs.pis,0) pis,
-	 nvl(pjs.cof,0) cof,
     pjs.cod_vendedor,
     pjs.vendedor,
     pjs.frete,
@@ -1339,13 +1314,11 @@ DISTINCT
     pjs.um,
     nvl(pjs.qtd,0) qtd,
     nvl(pjs.preco_unitario,0) preco_unitario,
-	nvl(pjs.preco_unitario2,0) preco_unitario2,
     nvl(pjs.preco_unitario_net,0) preco_unitario_net,
     nvl(pjs.material,0) material,
     nvl(pjs.custo_unitario,0) custo_unitario,
     nvl(pjs.icms_p,0) icms_p,
-	case when nvl(pjs.pis,0)='0' then '0%' else  pis_cof_p end pis_cof_p,
-
+    nvl(pjs.pis_cof_p,0) pis_cof_p,
     nvl(pjs.ipi_p,0) ipi_p,
     nvl(pjs.st,0) st,
     nvl(pjs.difal,0) difal,
@@ -1395,8 +1368,6 @@ DISTINCT
 
     CASE WHEN pjs.tipo_pedido='CV' THEN 0 ELSE NVL(C.CUSTO_GERENCIAL,0) END CUSTO_GERENCIAL,
      CASE WHEN pjs.tipo_pedido='CV' THEN 0 ELSE NVL(C.CUSTO_SERV,0) END CUSTO_SERV,
-   CASE WHEN pjs.tipo_pedido='CV' THEN 0 ELSE NVL(C.CUSTO_MATERIAL,0) END CUSTO_MATERIAL,
-
 
 
     C.LISTA LISTA
@@ -1406,7 +1377,6 @@ DISTINCT
      ,CASE 
 
 WHEN pjs.tipo_pedido='CV' THEN 0 
-
 WHEN E.CUSTO_GERENCIAL IS NOT NULL THEN NVL(E.CUSTO_GERENCIAL,0) 
 WHEN F.CUSTO_GERENCIAL IS NOT NULL THEN NVL(F.CUSTO_GERENCIAL,0) 
 WHEN TRIM(SUBSTR(IMLITM,INSTR(IMLITM,'.')+1,11))='P1'   THEN 0.08
@@ -1432,14 +1402,12 @@ TO_cHAR(UTEIS_MES) UTEIS_MES,
 
 
 CASE 
-WHEN pjs.codigo_cliente='3811' AND   IMDSC1 LIKE '% OS %'   THEN nvl(pjs.receita_bruta_total,0)/20*80
+WHEN pjs.codigo_cliente='3811' AND  pjs.cod IN ('139586','139586.O1','962149','130017','130016','130016.I2','963049.A1','962837.A1','962973.J1','962697.P5','962893.A1','962951.A1','962721.A1','962973.A1','962951.M1','963016.A1','962881.A1','962984.J1','962800.A1','962926.A1','963005.A1','963049.J1','962721.J1','962767.J1','962973.M1','963093.N1','962675.P5','962767.A1','962881.J1','962951.J1','962664.E1','962870.M1','963049.M1','962951','962837.M1','962732.J1','963060.A1','962732.A1','962870.A1','962653.F1','962686.E1','962778.A1','962848.A1','962800.M1','963082.N1','962881.M1','963005.M1','963027','963049','964008.J1','962826.A1','962926.M1','964474.A1','964160.A1','962926.L1','965278.A1','962848.M1','964740.A1','962653.A1','962686.A1','962686.F1','963005.J1','962826.M1','962826.J1','963049.N1','965760.A1','962708.A1','964008.A1','962641.A1','962653.E1','964160.N1','964740.M1','962859.A1','962951','962837.J1','139586','962149','130017','130016','963027','963049','968931.A1','962149.Q32','130016.Q50')   THEN nvl(pjs.receita_bruta_total,0)/20*80
 WHEN  pjs.cod IN ('130017')  THEN nvl(pjs.receita_bruta_total,0)/20*80
 
+WHEN pjs.cod IN ('139586','139586.O1','962149','130017','130016','130016.I2','963049.A1','962837.A1','962973.J1','962697.P5','962893.A1','962951.A1','962721.A1','962973.A1','962951.M1','963016.A1','962881.A1','962984.J1','962800.A1','962926.A1','963005.A1','963049.J1','962721.J1','962767.J1','962973.M1','963093.N1','962675.P5','962767.A1','962881.J1','962951.J1','962664.E1','962870.M1','963049.M1','962951','962837.M1','962732.J1','963060.A1','962732.A1','962870.A1','962653.F1','962686.E1','962778.A1','962848.A1','962800.M1','963082.N1','962881.M1','963005.M1','963027','963049','964008.J1','962826.A1','962926.M1','964474.A1','964160.A1','962926.L1','965278.A1','962848.M1','964740.A1','962653.A1','962686.A1','962686.F1','963005.J1','962826.M1','962826.J1','963049.N1','965760.A1','962708.A1','964008.A1','962641.A1','962653.E1','964160.N1','964740.M1','962859.A1','962951','962837.J1','139586','962149','130016','963027','963049','968931.A1','962149.Q32','130016.Q50','976225') THEN nvl(pjs.receita_bruta_total,0)
+WHEN  IMDSC1 LIKE '% OS %' AND IMSRP1 IN ('110','120') THEN nvl(pjs.receita_bruta_total,0)
 
-
-WHEN pjs.cod IN ('987248','987248.Q32','139586','139586.O1','962149','130017','130016','130016.I2','963049.A1','962837.A1','962973.J1','962697.P5','962893.A1','962951.A1','962721.A1','962973.A1','962951.M1','963016.A1','962881.A1','962984.J1','962800.A1','962926.A1','963005.A1','963049.J1','962721.J1','962767.J1','962973.M1','963093.N1','962675.P5','962767.A1','962881.J1','962951.J1','962664.E1','962870.M1','963049.M1','962951','962837.M1','962732.J1','963060.A1','962732.A1','962870.A1','962653.F1','962686.E1','962778.A1','962848.A1','962800.M1','963082.N1','962881.M1','963005.M1','963027','963049','964008.J1','962826.A1','962926.M1','964474.A1','964160.A1','962926.L1','965278.A1','962848.M1','964740.A1','962653.A1','962686.A1','962686.F1','963005.J1','962826.M1','962826.J1','963049.N1','965760.A1','962708.A1','964008.A1','962641.A1','962653.E1','964160.N1','964740.M1','962859.A1','962951','962837.J1','139586','962149','130016','963027','963049','968931.A1','962149.Q32','130016.Q50','976225') THEN nvl(pjs.receita_bruta_total,0)
-WHEN  IMDSC1 LIKE '% OS %' AND IMSRP1 IN ('110','120','180') THEN nvl(pjs.receita_bruta_total,0)
-WHEN  IMDSC1 LIKE '%GARD 4%'  THEN nvl(pjs.receita_bruta_total,0)
 ELSE 0 END COMPLEMENTO_RECEITA_BRUTA,
 
 
@@ -1775,199 +1743,6 @@ WHEN TRIM(COND_PAG_PEDIDO)='45/60/90' THEN 60
 WHEN TRIM(COND_PAG_PEDIDO)='45/52/59/66/73/80' THEN 62.5
 WHEN TRIM(COND_PAG_PEDIDO)='32/39/46' THEN 39
 WHEN TRIM(COND_PAG_PEDIDO)='93DDL Pagto 05 e 20' THEN 93
-WHEN TRIM(COND_PAG_PEDIDO)='105 DIAS 3a' THEN 105
-
-WHEN TRIM(COND_PAG_PEDIDO)='21/35/42/63/77' THEN 47.6
-WHEN TRIM(COND_PAG_PEDIDO)='45/60/75/90/105' THEN 75
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42/49/56/63/70' THEN 42.57
-WHEN TRIM(COND_PAG_PEDIDO)='35/40/45' THEN 40
-WHEN TRIM(COND_PAG_PEDIDO)='28/42/70/84' THEN 58.57
-WHEN TRIM(COND_PAG_PEDIDO)='35/49' THEN 42
-WHEN TRIM(COND_PAG_PEDIDO)='25/35/42' THEN 34
-WHEN TRIM(COND_PAG_PEDIDO)='20 DDL' THEN 20
-WHEN TRIM(COND_PAG_PEDIDO)='80/90/100/110 DDL' THEN 96.25
-WHEN TRIM(COND_PAG_PEDIDO)='45/55/65/75' THEN 57.5
-WHEN TRIM(COND_PAG_PEDIDO)='60/67/74/81/88' THEN 74
-WHEN TRIM(COND_PAG_PEDIDO)='30/60/90/120/150/180' THEN 90
-WHEN TRIM(COND_PAG_PEDIDO)='15/30/45' THEN 30
-WHEN TRIM(COND_PAG_PEDIDO)='105 DDL' THEN 105
-WHEN TRIM(COND_PAG_PEDIDO)='20/30/40 SEXTA FEIRA' THEN 30
-WHEN TRIM(COND_PAG_PEDIDO)='VENC 56 3a/4a/5a' THEN 56
-WHEN TRIM(COND_PAG_PEDIDO)='14/21/28/63/70/77' THEN 39.83
-WHEN TRIM(COND_PAG_PEDIDO)='15/46/77/105 a 442 Pgto dia 16' THEN 97.67
-WHEN TRIM(COND_PAG_PEDIDO)='103 DDL' THEN 103
-WHEN TRIM(COND_PAG_PEDIDO)='28/52/70/84' THEN 58.5
-WHEN TRIM(COND_PAG_PEDIDO)='28/38' THEN 33
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42/49/56/63/84' THEN 45.71
-WHEN TRIM(COND_PAG_PEDIDO)='73 DDL' THEN 73
-WHEN TRIM(COND_PAG_PEDIDO)='126 DDL' THEN 126
-WHEN TRIM(COND_PAG_PEDIDO)='31/41' THEN 36
-WHEN TRIM(COND_PAG_PEDIDO)='39/49/59' THEN 49
-WHEN TRIM(COND_PAG_PEDIDO)='40/50 DDL Pagto Terça-Feira' THEN 45.83
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42 (exc 05/10/20/25)' THEN 37.5
-WHEN TRIM(COND_PAG_PEDIDO)='31/36/38' THEN 35
-WHEN TRIM(COND_PAG_PEDIDO)='26 DDL' THEN 26
-WHEN TRIM(COND_PAG_PEDIDO)='45 DDL Pagto Quarta Feira' THEN 45
-WHEN TRIM(COND_PAG_PEDIDO)='30/54/75 DDL' THEN 53.67
-WHEN TRIM(COND_PAG_PEDIDO)='30 DDL Pagto dia 5 util' THEN 30
-WHEN TRIM(COND_PAG_PEDIDO)='28/45/60' THEN 44.33
-WHEN TRIM(COND_PAG_PEDIDO)='REMESSA' THEN 0
-WHEN TRIM(COND_PAG_PEDIDO)='40/55/70' THEN 55
-WHEN TRIM(COND_PAG_PEDIDO)='90/120/150' THEN 120
-WHEN TRIM(COND_PAG_PEDIDO)='28/45/62' THEN 45
-WHEN TRIM(COND_PAG_PEDIDO)='21/35' THEN 28
-WHEN TRIM(COND_PAG_PEDIDO)='49/63/77/91/105' THEN 77
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42/56/60/72/90/120' THEN 56.5
-WHEN TRIM(COND_PAG_PEDIDO)='30/60 QUARTA' THEN 45
-WHEN TRIM(COND_PAG_PEDIDO)='30/45/60/75/90/105/120' THEN 67.86
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42 sem Pgto 10/11/12' THEN 38.67
-WHEN TRIM(COND_PAG_PEDIDO)='14/21/49/56/63/70' THEN 41.83
-WHEN TRIM(COND_PAG_PEDIDO)='60 DDL Pagto dia 16 e 30' THEN 60
-WHEN TRIM(COND_PAG_PEDIDO)='40/60' THEN 50
-WHEN TRIM(COND_PAG_PEDIDO)='37/67' THEN 52
-WHEN TRIM(COND_PAG_PEDIDO)='49/79/109/139/169/199 a 799' THEN 129.83
-WHEN TRIM(COND_PAG_PEDIDO)='23 DDL' THEN 23
-WHEN TRIM(COND_PAG_PEDIDO)='45/60/75/90/105/120' THEN 75
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42/49/56/63/70/77/84' THEN 50.67
-WHEN TRIM(COND_PAG_PEDIDO)='28/42/56/64/70 DDL' THEN 52.57
-WHEN TRIM(COND_PAG_PEDIDO)='60 DDL Pagto Quarta-Feira' THEN 60
-WHEN TRIM(COND_PAG_PEDIDO)='35/56/77' THEN 56
-WHEN TRIM(COND_PAG_PEDIDO)='42/56/63/84' THEN 58.75
-WHEN TRIM(COND_PAG_PEDIDO)='145 Dias - 3a' THEN 145
-WHEN TRIM(COND_PAG_PEDIDO)='14/21/28/35/42/49' THEN 31.5
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42/50' THEN 38.33
-WHEN TRIM(COND_PAG_PEDIDO)='106 DDL' THEN 106
-WHEN TRIM(COND_PAG_PEDIDO)='15/45/75' THEN 45
-WHEN TRIM(COND_PAG_PEDIDO)='48 DDL' THEN 48
-WHEN TRIM(COND_PAG_PEDIDO)='70/80' THEN 75
-WHEN TRIM(COND_PAG_PEDIDO)='34/63' THEN 48.5
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42/56/70/77/84' THEN 49.71
-WHEN TRIM(COND_PAG_PEDIDO)='42/56/63' THEN 53.67
-WHEN TRIM(COND_PAG_PEDIDO)='28 DDL Pagto Segunda-Feira' THEN 28
-WHEN TRIM(COND_PAG_PEDIDO)='90/105/120' THEN 105
-WHEN TRIM(COND_PAG_PEDIDO)='20/42/56' THEN 39.33
-WHEN TRIM(COND_PAG_PEDIDO)='40/54/68/82/96/110/124' THEN 76.57
-WHEN TRIM(COND_PAG_PEDIDO)='28/35 Pagto Ter-Qui' THEN 31.5
-WHEN TRIM(COND_PAG_PEDIDO)='30/42/49' THEN 40.33
-WHEN TRIM(COND_PAG_PEDIDO)='20/30' THEN 25
-WHEN TRIM(COND_PAG_PEDIDO)='30/50' THEN 40
-WHEN TRIM(COND_PAG_PEDIDO)='42/56/70/84' THEN 60.57
-WHEN TRIM(COND_PAG_PEDIDO)='15/20/30/35' THEN 25
-WHEN TRIM(COND_PAG_PEDIDO)='28/42/56/70/84/98/112' THEN 63.86
-WHEN TRIM(COND_PAG_PEDIDO)='28/42/56/63/70' THEN 50.14
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42/49/56/62/69' THEN 45.14
-WHEN TRIM(COND_PAG_PEDIDO)='66 DDL' THEN 66
-WHEN TRIM(COND_PAG_PEDIDO)='128 DDL' THEN 128
-WHEN TRIM(COND_PAG_PEDIDO)='56/77/98/119' THEN 90
-WHEN TRIM(COND_PAG_PEDIDO)='45 DDL Pagto 11 e 22' THEN 33
-WHEN TRIM(COND_PAG_PEDIDO)='11 DDL' THEN 11
-WHEN TRIM(COND_PAG_PEDIDO)='15/25' THEN 20
-WHEN TRIM(COND_PAG_PEDIDO)='45/50/55/60/65/70/75/80/85' THEN 62.5
-WHEN TRIM(COND_PAG_PEDIDO)='40/60/80/100/120' THEN 80
-WHEN TRIM(COND_PAG_PEDIDO)='92 DDL' THEN 92
-WHEN TRIM(COND_PAG_PEDIDO)='45/52/59/66/73/80' THEN 61.67
-WHEN TRIM(COND_PAG_PEDIDO)='05/10/15/20' THEN 12.5
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42 (exc 05/10/20/25)' THEN 37.5
-WHEN TRIM(COND_PAG_PEDIDO)='132 DDL' THEN 132
-WHEN TRIM(COND_PAG_PEDIDO)='56/77' THEN 66.5
-WHEN TRIM(COND_PAG_PEDIDO)='30/40' THEN 35
-WHEN TRIM(COND_PAG_PEDIDO)='35/45/60/75/90' THEN 61
-WHEN TRIM(COND_PAG_PEDIDO)='28/30/35/42/49' THEN 36.8
-WHEN TRIM(COND_PAG_PEDIDO)='27/49' THEN 38
-WHEN TRIM(COND_PAG_PEDIDO)='28/56/84' THEN 56
-WHEN TRIM(COND_PAG_PEDIDO)='35/49/63' THEN 49
-WHEN TRIM(COND_PAG_PEDIDO)='05 DDL' THEN 5
-WHEN TRIM(COND_PAG_PEDIDO)='21/42/63' THEN 42
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42/49/56/84' THEN 42.71
-WHEN TRIM(COND_PAG_PEDIDO)='25/35/45' THEN 35
-WHEN TRIM(COND_PAG_PEDIDO)='0/28' THEN 14
-WHEN TRIM(COND_PAG_PEDIDO)='49/63/70' THEN 60.67
-WHEN TRIM(COND_PAG_PEDIDO)='90/100/110 DDL' THEN 100
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42/49/77/84/91' THEN 51.71
-WHEN TRIM(COND_PAG_PEDIDO)='15/22/29/36/43/50' THEN 30.83
-WHEN TRIM(COND_PAG_PEDIDO)='60 dias 5o Util' THEN 60
-WHEN TRIM(COND_PAG_PEDIDO)='AMOSTRA GRATIS' THEN 0
-WHEN TRIM(COND_PAG_PEDIDO)='45/53' THEN 49
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/45' THEN 36
-WHEN TRIM(COND_PAG_PEDIDO)='102 DDL' THEN 102
-WHEN TRIM(COND_PAG_PEDIDO)='24/31/38/45' THEN 34.5
-WHEN TRIM(COND_PAG_PEDIDO)='34/62' THEN 48
-WHEN TRIM(COND_PAG_PEDIDO)='29/36/43' THEN 36
-WHEN TRIM(COND_PAG_PEDIDO)='28/42/63/77/91 DDL' THEN 56.2
-WHEN TRIM(COND_PAG_PEDIDO)='150 DDL' THEN 150
-WHEN TRIM(COND_PAG_PEDIDO)='28/42/56' THEN 42.67
-WHEN TRIM(COND_PAG_PEDIDO)='28/42/56/63' THEN 49.75
-WHEN TRIM(COND_PAG_PEDIDO)='28DDL 05/15/25' THEN 23.33
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/60' THEN 41
-WHEN TRIM(COND_PAG_PEDIDO)='62 DDL' THEN 62
-WHEN TRIM(COND_PAG_PEDIDO)='28/42/56/63/70/84' THEN 54.14
-WHEN TRIM(COND_PAG_PEDIDO)='21/42' THEN 31.5
-WHEN TRIM(COND_PAG_PEDIDO)='32 DDL' THEN 32
-WHEN TRIM(COND_PAG_PEDIDO)='35/60/75/90' THEN 72.5
-WHEN TRIM(COND_PAG_PEDIDO)='30/60 Pgto Segunda-Feira' THEN 45
-WHEN TRIM(COND_PAG_PEDIDO)='28/35 Pagto 07/17/27' THEN 30
-WHEN TRIM(COND_PAG_PEDIDO)='30/40/50/60/70/80' THEN 50
-WHEN TRIM(COND_PAG_PEDIDO)='BONIFICACAO' THEN 0
-WHEN TRIM(COND_PAG_PEDIDO)='49/56/63 Pagto Quinta-feira' THEN 56.67
-WHEN TRIM(COND_PAG_PEDIDO)='51 DDL' THEN 51
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/56' THEN 39.67
-WHEN TRIM(COND_PAG_PEDIDO)='30/37/45/52/60' THEN 44.67
-WHEN TRIM(COND_PAG_PEDIDO)='30/40/60' THEN 43.33
-WHEN TRIM(COND_PAG_PEDIDO)='20/27' THEN 23.5
-WHEN TRIM(COND_PAG_PEDIDO)='45/55/65/75 Pg Ter Qua Qui Sex' THEN 63.67
-WHEN TRIM(COND_PAG_PEDIDO)='138' THEN 138
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42/49/56/63/70/77849198' THEN 49.71
-WHEN TRIM(COND_PAG_PEDIDO)='37/44/55' THEN 45.33
-WHEN TRIM(COND_PAG_PEDIDO)='22/29/36/43/50/57' THEN 38.83
-WHEN TRIM(COND_PAG_PEDIDO)='30/60/90/120 a 750 Pgto dia 01' THEN 60.67
-WHEN TRIM(COND_PAG_PEDIDO)='63/70/77/84/91' THEN 77
-WHEN TRIM(COND_PAG_PEDIDO)='42/59/56' THEN 52.33
-WHEN TRIM(COND_PAG_PEDIDO)='35/50' THEN 42.5
-WHEN TRIM(COND_PAG_PEDIDO)='30/50/70' THEN 50
-WHEN TRIM(COND_PAG_PEDIDO)='5 DDL' THEN 5
-WHEN TRIM(COND_PAG_PEDIDO)='35/49/63 SPG 10/15/20/25/30/31' THEN 34.83
-WHEN TRIM(COND_PAG_PEDIDO)='15/21/28' THEN 21.33
-WHEN TRIM(COND_PAG_PEDIDO)='104 DDL' THEN 104
-WHEN TRIM(COND_PAG_PEDIDO)='30/55/75 - 05/20/25' THEN 45.67
-WHEN TRIM(COND_PAG_PEDIDO)='130 DDL' THEN 130
-WHEN TRIM(COND_PAG_PEDIDO)='30/60/90/120/150 ATE 510' THEN 90.67
-WHEN TRIM(COND_PAG_PEDIDO)='28/35/42/49/70' THEN 46.57
-WHEN TRIM(COND_PAG_PEDIDO)='35 - 10/20/30' THEN 25
-WHEN TRIM(COND_PAG_PEDIDO)='28 DDL Pagto Sexta-Feira' THEN 28
-WHEN TRIM(COND_PAG_PEDIDO)='31/38/45/52/59/66/73/80/87/94' THEN 56.11
-WHEN TRIM(COND_PAG_PEDIDO)='56/84/112/140' THEN 97.33
-WHEN TRIM(COND_PAG_PEDIDO)='29/36' THEN 32.5
-WHEN TRIM(COND_PAG_PEDIDO)='60/75/90/105/120' THEN 82.5
-WHEN TRIM(COND_PAG_PEDIDO)='35/70/84' THEN 63
-WHEN TRIM(COND_PAG_PEDIDO)='14/21/28/35/42 DDL' THEN 30.67
-WHEN TRIM(COND_PAG_PEDIDO)='55/86/116/147/177/208 à 1120' THEN 125.67
-WHEN TRIM(COND_PAG_PEDIDO)='27 DDL' THEN 27
-WHEN TRIM(COND_PAG_PEDIDO)='28/42/56/84' THEN 50
-WHEN TRIM(COND_PAG_PEDIDO)='56/70/84' THEN 70
-WHEN TRIM(COND_PAG_PEDIDO)='45/60/90' THEN 65
-WHEN TRIM(COND_PAG_PEDIDO)='60 DDL Ter Qua Qui Sex' THEN 60
-WHEN TRIM(COND_PAG_PEDIDO)='42/70/84' THEN 65.33
-WHEN TRIM(COND_PAG_PEDIDO)='140 DDL' THEN 140
-WHEN TRIM(COND_PAG_PEDIDO)='25/30/35' THEN 30
-WHEN TRIM(COND_PAG_PEDIDO)='21/42/49/56/63' THEN 44.2
-WHEN TRIM(COND_PAG_PEDIDO)='15/30/45/60' THEN 37.5
-WHEN TRIM(COND_PAG_PEDIDO)='7/14/21/28/35' THEN 21.4
-WHEN TRIM(COND_PAG_PEDIDO)='35/42/50' THEN 42.33
-WHEN TRIM(COND_PAG_PEDIDO)='38/45/52/59/66/72/79/85/92/99' THEN 61.5
-WHEN TRIM(COND_PAG_PEDIDO)='100 DDL' THEN 100
-WHEN TRIM(COND_PAG_PEDIDO)='129' THEN 129
-WHEN TRIM(COND_PAG_PEDIDO)='35 - 15/25' THEN 20
-WHEN TRIM(COND_PAG_PEDIDO)='49/56/63/84 DIAS UTEIS' THEN 60.67
-WHEN TRIM(COND_PAG_PEDIDO)='0/30' THEN 15
-WHEN TRIM(COND_PAG_PEDIDO)='42/84' THEN 63
-WHEN TRIM(COND_PAG_PEDIDO)='133 DDL' THEN 133
-WHEN TRIM(COND_PAG_PEDIDO)='25/35' THEN 30
-WHEN TRIM(COND_PAG_PEDIDO)='29/37/43' THEN 36.33
-WHEN TRIM(COND_PAG_PEDIDO)='108 DDL' THEN 108
-WHEN TRIM(COND_PAG_PEDIDO)='44/75/106/135 à 775 Pgto 20' THEN 90
-WHEN TRIM(COND_PAG_PEDIDO)='42/49/56/63/70/77/84' THEN 63
-WHEN TRIM(COND_PAG_PEDIDO)='30 DDL Pagto Quarta Feira' THEN 30
-WHEN TRIM(COND_PAG_PEDIDO)='33/43' THEN 38
 
 
 ELSE 0 
@@ -1979,19 +1754,16 @@ END PRAZO_MEDIO_PAG
 ,STATUS
 
 ,TRIM(IMSEG1) SEGMENTO
-,TRIM(IMSRP5) CAT5
 
-,VALOR_FRETE
-,VALOR_SEGURO
+
+
 
 FROM
     CONVERSAO pjs
-inner join  proddta.F4101 ON  TRIM(pjs.cod)=trim(imlitm)
+    inner join  proddta.F4101 ON  TRIM(pjs.cod)=trim(imlitm)
 left outer join CUSTO C on trim(COD_R) = trim(C.COD_ITEM_G) AND TO_CHAR(pjs.ULT_DATA, 'DD/MM/YYYY')=TO_CHAR(C.DATA_G, 'DD/MM/YYYY')
 LEFT JOIN MES_UTEIS ON to_char(pjs.mes_ano)=to_char(MES_ANO_UTEIS)
 LEFT JOIN DIA_UTEIS ON to_char(pjs.mes_ano)=to_char(MES_HOJE_UTEIS)
-
-
 
 left join (
 
@@ -2000,10 +1772,9 @@ B.DATA DATA_G,
   TRIM(B.ITEM) AS COD_ITEM_G,
 
           (TO_NUMBER(B.CUSTO_REAIS)) AS CUSTO_GERENCIAL
-                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV  
-							   , (TO_NUMBER(NVL(B.CUSTO_MATERIAL,0))) AS CUSTO_MATERIAL 
+                               , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV 
      ,B.LISTA
-FROM  PUBDB.TEMP_CUSTO_ULTMES B  
+FROM  proddta.TEMP_HISTORICO_CUSTO B  
 WHERE   TRIM(B.LISTA)='NET'      
 
   ) E  ON     REPLACE(TRIM(SUBSTR(IMLITM,INSTR(IMLITM,'.')+1,11)),'P15','A5')=trim(E.COD_ITEM_G) AND IMLITM LIKE '%.%' AND TO_CHAR(pjs.ULT_DATA, 'DD/MM/YYYY')=TO_CHAR(E.DATA_G, 'DD/MM/YYYY')
@@ -2016,36 +1787,11 @@ B.DATA DATA_G,
 
           (TO_NUMBER(B.CUSTO_REAIS)) AS CUSTO_GERENCIAL
                                , (TO_NUMBER(B.CUSTO_SERV)) AS CUSTO_SERV 
-							   , (TO_NUMBER(NVL(B.CUSTO_MATERIAL,0))) AS CUSTO_MATERIAL 
      ,B.LISTA
-FROM  PUBDB.TEMP_CUSTO_ULTMES B  
+FROM  proddta.TEMP_HISTORICO_CUSTO B  
 WHERE   TRIM(B.LISTA)='EMB'      
 
   ) F  ON     REPLACE(TRIM(SUBSTR(IMLITM,INSTR(IMLITM,'.')+1,11)),'P15','A5')=trim(F.COD_ITEM_G) AND IMLITM LIKE '%.%' AND TO_CHAR(pjs.ULT_DATA, 'DD/MM/YYYY')=TO_CHAR(F.DATA_G, 'DD/MM/YYYY')
-
-
-
-
-),CONVERSOR AS (
-
-
-SELECT 
-CXCRR*USD_BRL CONVERSOR,
-to_char(to_date((CXEFT + 1900000), 'YYYYDDD'), 'MM/YYYY') MES_ANO_C
-FROM proddta.F0015
-LEFT JOIN (
-SELECT AVG(CXCRR) USD_BRL,
-to_char(ADD_MONTHS(to_date((CXEFT + 1900000), 'YYYYDDD'),1), 'MM/YYYY') MES_ANO_BRL
-FROM  proddta.F0015 WHERE CXCRCD='USD' AND CXCRDC='BRL'
-GROUP BY to_char(ADD_MONTHS(to_date((CXEFT + 1900000), 'YYYYDDD'),1), 'MM/YYYY')
-) ON to_char(to_date((CXEFT + 1900000), 'YYYYDDD'), 'MM/YYYY')=MES_ANO_BRL
-WHERE CXCRCD='CLP' AND CXCRDC='USD'
-AND to_char(to_date((CXEFT + 1900000), 'YYYYDDD'), 'DD')='01'
-
-
-
-
-
 
 
   )
@@ -2054,19 +1800,7 @@ AND to_char(to_date((CXEFT + 1900000), 'YYYYDDD'), 'DD')='01'
   ORIGEM, 
   P_ICMS_FORA, 
   DESPESA_FRETE, 
-     CASE 
-WHEN TIPO IN ('DEVOLUCAO ANT','DEVOLUCAO') THEN ICMS_TOTAL*-1
-ELSE ICMS_TOTAL
-END ICMS_TOTAL,
-  CASE 
-WHEN TIPO IN ('DEVOLUCAO ANT','DEVOLUCAO') THEN PIS*-1
-ELSE PIS
-END PIS,
-  CASE 
-WHEN TIPO IN ('DEVOLUCAO ANT','DEVOLUCAO') THEN COF*-1
-ELSE COF
-END COF,
-
+  ICMS_TOTAL, 
   COD_VENDEDOR, 
   VENDEDOR, 
   FRETE, 
@@ -2092,32 +1826,9 @@ END COF,
   COD, DESCRICAO, 
   UM, 
   QTD, 
-  CASE 
-  WHEN FILIAL='710000' AND TIPO='CARTEIRA' THEN   NVL(PRECO_UNITARIO*NVL(B.CONVERSOR,0),4)
-  WHEN FILIAL='710000' THEN   NVL(PRECO_UNITARIO*NVL(A.CONVERSOR,0),4)
-  ELSE PRECO_UNITARIO
-  END PRECO_UNITARIO, 
-
- CASE 
-  WHEN FILIAL='710000' AND TIPO='CARTEIRA' THEN   NVL(PRECO_UNITARIO2*NVL(B.CONVERSOR,0),4)
-  WHEN FILIAL='710000' THEN   NVL(PRECO_UNITARIO2*NVL(A.CONVERSOR,0),4)
-  ELSE PRECO_UNITARIO2
-  END PRECO_UNITARIO2, 
-
-
-  CASE 
-  WHEN FILIAL='710000' AND TIPO='CARTEIRA' THEN   NVL(PRECO_UNITARIO*0.81*NVL(B.CONVERSOR,0),4)
-  WHEN FILIAL='710000' THEN   NVL(PRECO_UNITARIO*0.81*NVL(A.CONVERSOR,0),4)
-  ELSE PRECO_UNITARIO_NET
-  END PRECO_UNITARIO_NET, 
-
-
+  PRECO_UNITARIO, 
+  PRECO_UNITARIO_NET, 
   MATERIAL, 
-
-
-
-
-
   CUSTO_UNITARIO, 
   ICMS_P, 
   PIS_COF_P, 
@@ -2125,24 +1836,10 @@ END COF,
   ST, 
   DIFAL, 
   IMNA, 
-
-  CASE 
-  WHEN FILIAL='710000' AND TIPO='CARTEIRA' THEN   NVL(RECEITA_BRUTA_TOTAL*NVL(B.CONVERSOR,0),4)
-  WHEN FILIAL='710000' THEN   NVL(RECEITA_BRUTA_TOTAL*NVL(A.CONVERSOR,0),4)
-  ELSE RECEITA_BRUTA_TOTAL
-  END RECEITA_BRUTA_TOTAL, 
-
-    CASE 
-  WHEN FILIAL='710000' AND TIPO='CARTEIRA' THEN   NVL(RECEITA_BRUTA_TOTAL*0.81*NVL(B.CONVERSOR,0),4)
-  WHEN FILIAL='710000' THEN   NVL(RECEITA_BRUTA_TOTAL*0.81*NVL(A.CONVERSOR,0),4)
-  ELSE RECEITA_NET_TOTAL
-  END RECEITA_NET_TOTAL, 
-
-
-
+  RECEITA_BRUTA_TOTAL, 
+  RECEITA_NET_TOTAL, 
   CUSTO_MATERIAL_TOTAL, 
-  CUSTO_TOTAL_2 CUSTO_TOTAL_2, 
-
+  CUSTO_TOTAL_2, 
   BUSINESS_UNIT, 
   TECNOLOGIA, 
   UN_NEG, 
@@ -2167,12 +1864,10 @@ END COF,
   USER_VENDEDOR, 
   DATA_CUSTO, 
   CASE 
-  WHEN BUSINESS_UNIT='BREU E DERIVADOS'  THEN  NVL(CUSTO_GERENCIAL,0)+NVL(CUSTO_SERV,0) +NVL(CUSTO_MATERIAL,0)
-   WHEN BUSINESS_UNIT='POLIESTER' AND TECNOLOGIA ='ELEKO' THEN  NVL(CUSTO_GERENCIAL,0)+NVL(CUSTO_MATERIAL,0) 
-     WHEN SEGMENTO IN ('981196','981746','987636','985877') THEN  NVL(CUSTO_GERENCIAL,0)+NVL(CUSTO_MATERIAL,0) 
-
-
-  ELSE CUSTO_GERENCIAL END CUSTO_GERENCIAL,
+  	WHEN BUSINESS_UNIT='GREEN PINE' AND SEGMENTO NOT IN ('975685','978714') THEN  NVL(CUSTO_GERENCIAL,0)+NVL(CUSTO_SERV,0) 
+  	WHEN BUSINESS_UNIT='POLIESTER' AND TECNOLOGIA ='ELEKO' THEN  NVL(CUSTO_GERENCIAL,0)+NVL(CUSTO_SERV,0)
+  ELSE CUSTO_GERENCIAL END 
+  CUSTO_GERENCIAL,
 
   LISTA, 
   DESCRICAO_R, 
@@ -2185,18 +1880,7 @@ TO_NUMBER(ROUND(COMPLEMENTO_RECEITA_BRUTA+RECEITA_BRUTA_TOTAL,2))  RECEITA_BRUTA
 TO_NUMBER(ROUND(COMPLEMENTO_RECEITA_BRUTA+RECEITA_NET_TOTAL,2)) RECEITA_LIQUIDA_M_TOTAL,
 CASE WHEN NVL(UTEIS_DIA,0)='0' THEN  0 when nvl(UTEIS_MES,0)='0' then 0             ELSE ROUND(TO_NUMBER(ROUND(COMPLEMENTO_RECEITA_BRUTA+RECEITA_BRUTA_TOTAL,2)) /UTEIS_DIA*UTEIS_MES,2) END PREVISAO_RECEITA_BRUTA,
 TO_NUMBER(CASE WHEN NVL(UTEIS_DIA,0)='0' THEN  0 when nvl(UTEIS_MES,0)='0' then 0   ELSE ROUND((COMPLEMENTO_RECEITA_BRUTA+RECEITA_NET_TOTAL)/UTEIS_DIA*UTEIS_MES,2) END) PREVISAO_RECEITA_LIQUIDA,
-
-TO_NUMBER(CASE WHEN NVL(UTEIS_DIA,0)='0' THEN  0 when nvl(UTEIS_MES,0)='0' then 0   
-
-
-
-WHEN BUSINESS_UNIT='BREU E DERIVADOS'  THEN ROUND( ((COMPLEMENTO_RECEITA_BRUTA+RECEITA_NET_TOTAL)-(CUSTO_GERENCIAL*QTD+CUSTO_EMB*QTD+NVL(CUSTO_SERV,0)*QTD+NVL(CUSTO_MATERIAL,0)*QTD))/UTEIS_DIA*UTEIS_MES ,2)  
-WHEN BUSINESS_UNIT='POLIESTER' AND  TECNOLOGIA ='ELEKO'  THEN ROUND( ((COMPLEMENTO_RECEITA_BRUTA+RECEITA_NET_TOTAL)-(CUSTO_GERENCIAL*QTD+CUSTO_EMB*QTD+NVL(CUSTO_MATERIAL,0) *QTD))/UTEIS_DIA*UTEIS_MES ,2)  
-
-WHEN SEGMENTO  IN ('981196','981746','987636','985877') THEN ROUND( ((COMPLEMENTO_RECEITA_BRUTA+RECEITA_NET_TOTAL)-(CUSTO_GERENCIAL*QTD+CUSTO_EMB*QTD+NVL(CUSTO_MATERIAL,0)*QTD))/UTEIS_DIA*UTEIS_MES ,2)  
-
-
-ELSE ROUND(   ((COMPLEMENTO_RECEITA_BRUTA+RECEITA_NET_TOTAL)-(CUSTO_GERENCIAL*QTD+CUSTO_EMB*QTD))/UTEIS_DIA*UTEIS_MES ,2) END)    PREVISAO_MARGEM,
+TO_NUMBER(CASE WHEN NVL(UTEIS_DIA,0)='0' THEN  0 when nvl(UTEIS_MES,0)='0' then 0   WHEN BUSINESS_UNIT='GREEN PINE' AND SEGMENTO NOT IN ('975685','978714') THEN ROUND( ((COMPLEMENTO_RECEITA_BRUTA+RECEITA_NET_TOTAL)-(CUSTO_GERENCIAL*QTD+CUSTO_EMB*QTD+NVL(CUSTO_SERV,0)*QTD))/UTEIS_DIA*UTEIS_MES ,2)  ELSE ROUND(   ((COMPLEMENTO_RECEITA_BRUTA+RECEITA_NET_TOTAL)-(CUSTO_GERENCIAL*QTD+CUSTO_EMB*QTD))/UTEIS_DIA*UTEIS_MES ,2) END)    PREVISAO_MARGEM,
 
 
 INFORMACAO_FRETE,
@@ -2208,10 +1892,4 @@ PAIS
 ,STATUS
 ,CASE WHEN NVL(UTEIS_DIA,0)='0' THEN  0 when nvl(UTEIS_MES,0)='0' then 0             ELSE ROUND(TO_NUMBER(  QTD ) /UTEIS_DIA*UTEIS_MES,2) END PREVISAO_QTD
 ,SEGMENTO
-,CAT5
-,VALOR_FRETE
-,VALOR_SEGURO
 FROM ULT_TEMP
-LEFT JOIN CONVERSOR A ON MES_ANO=A.MES_ANO_C
-LEFT JOIN CONVERSOR B ON TO_CHAR(to_date(sysdate), 'MM/YYYY')=B.MES_ANO_C;
-
